@@ -6,16 +6,21 @@ import finnHub from '../apis/finnHub';
 import { TbArrowBigUpLines, TbArrowBigDownLines } from "react-icons/tb";
 import { WatchListContext } from '../context/watchListContext';
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const StockList = () => {
     const [stocks, setStock] = useState([])
-
     const {watchList, setWachList} = useContext(WatchListContext)
+    const navigate = useNavigate()
+
     const changeColor = (change) => {
         return (change > 0) ? "success" : "danger"
     }
     const renderIcon = (change) => {
     return (change >0) ? <TbArrowBigUpLines /> : <TbArrowBigDownLines />
+    }
+    const handleStockSelect = (symbol) =>{
+        navigate(`detail/${symbol}`)
     }
     
     useEffect(() => {
@@ -72,7 +77,11 @@ const StockList = () => {
                 <tbody>
                 {stocks.map((stock) => {
                         return (
-                        <tr className='table-row' key={stock.symbol}>
+                        <tr 
+                        className='table-row'
+                        key={stock.symbol}
+                        style={{cursor:"pointer"}}
+                        onClick={() => handleStockSelect(stock.symbol)}>
                             <td scope='row'>{stock.symbol}</td>
                             <td>{stock.data.c}</td>
                             <td className={`text-${changeColor(stock.data.d)}`}>{renderIcon(stock.data.d)} {stock.data.d}</td>
