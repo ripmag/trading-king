@@ -1,11 +1,14 @@
 import React from 'react';
+import { useContext } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import finnHub from '../apis/finnHub';
+import { WatchListContext } from '../context/watchListContext';
 
 const AutoComplete = () => {
     const [search, setSearch] = useState("")
     const [searchList, setSearchList] = useState([])
+    const {addStock} = useContext(WatchListContext)
     const renderDropdown = () => {
         const dropDownClass = search ? "show" : null
         return(
@@ -19,7 +22,13 @@ const AutoComplete = () => {
             }} >
                 {searchList.map((stock) =>{
                     return (
-                        <li key={stock.symbol} className='dropdown-item'>{stock.description}</li>
+                        <li 
+                        key={stock.symbol} 
+                        onClick={() => {
+                            addStock(stock.symbol)
+                            setSearch('')
+                        }} 
+                        className='dropdown-item'>{stock.description}</li>
                     )
                 })}
             </ul>
@@ -35,9 +44,7 @@ const AutoComplete = () => {
                         q: search
                     }
                 })
-                if (res) {
-                    console.log(res)
-                    let symbolList = res.data.result.map(stock => { return { symbol: stock.symbol } })
+                if (res) {                    
                     setSearchList(res.data.result)
                 }
 

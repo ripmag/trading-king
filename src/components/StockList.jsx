@@ -1,19 +1,23 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { useState } from 'react';
+
 import finnHub from '../apis/finnHub';
 import { TbArrowBigUpLines, TbArrowBigDownLines } from "react-icons/tb";
+import { WatchListContext } from '../context/watchListContext';
+import { useContext } from 'react';
 
 const StockList = () => {
-    const [watchList, setWachList] = useState(["GOOGL", "MSFT", "AMZN"])
-    const [stocks, setStock] = useState()
+    const [stocks, setStock] = useState([])
+
+    const {watchList, setWachList} = useContext(WatchListContext)
     const changeColor = (change) => {
         return (change > 0) ? "success" : "danger"
     }
     const renderIcon = (change) => {
     return (change >0) ? <TbArrowBigUpLines /> : <TbArrowBigDownLines />
     }
+    
     useEffect(() => {
         let isMounted = true
         const fetchData = async () => {
@@ -27,15 +31,16 @@ const StockList = () => {
                     })
 
                 }))
+                console.log("res:",res)
 
-                const data = res.map(responce => {
+                const data = res.map((responce) => {
                     return {
                         data: responce.data,
                         symbol: responce.config.params.symbol
                     }
                 })
 
-                //console.log("data:",data)
+                console.log("data:",data)
                 if (isMounted)
                     setStock(data)
 
@@ -46,8 +51,8 @@ const StockList = () => {
         fetchData()
 
         return () => (isMounted = false)
-    }, [])
-
+    }, [watchList])
+    console.log(watchList)
 
     return (
         <div>
