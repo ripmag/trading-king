@@ -3,11 +3,17 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import finnHub from '../apis/finnHub';
+import { TbArrowBigUpLines, TbArrowBigDownLines } from "react-icons/tb";
 
 const StockList = () => {
     const [watchList, setWachList] = useState(["GOOGL", "MSFT", "AMZN"])
     const [stocks, setStock] = useState()
-
+    const changeColor = (change) => {
+        return (change > 0) ? "success" : "danger"
+    }
+    const renderIcon = (change) => {
+    return (change >0) ? <TbArrowBigUpLines /> : <TbArrowBigDownLines />
+    }
     useEffect(() => {
         let isMounted = true
         const fetchData = async () => {
@@ -64,8 +70,8 @@ const StockList = () => {
                         <tr className='table-row' key={stock.symbol}>
                             <th scope='row'>{stock.symbol}</th>
                             <td>{stock.data.c}</td>
-                            <td>{stock.data.d}</td>
-                            <td>{stock.data.dp}</td>
+                            <td className={`text-${changeColor(stock.data.d)}`}>{renderIcon(stock.data.d)} {stock.data.d}</td>
+                            <td className={`text-${changeColor(stock.data.dp)}`}>{renderIcon(stock.data.dp)} {stock.data.dp}</td>
                             <td>{stock.data.h}</td>
                             <td>{stock.data.l}</td>
                             <td>{stock.data.o}</td>
