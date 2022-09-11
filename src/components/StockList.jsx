@@ -35,7 +35,7 @@ const StockList = () => {
                     }
                 })
 
-                console.log(data)
+                //console.log("data:",data)
                 if (isMounted)
                     setStock(data)
 
@@ -68,7 +68,7 @@ const StockList = () => {
                 {stocks.map((stock) => {
                         return (
                         <tr className='table-row' key={stock.symbol}>
-                            <th scope='row'>{stock.symbol}</th>
+                            <td scope='row'>{stock.symbol}</td>
                             <td>{stock.data.c}</td>
                             <td className={`text-${changeColor(stock.data.d)}`}>{renderIcon(stock.data.d)} {stock.data.d}</td>
                             <td className={`text-${changeColor(stock.data.dp)}`}>{renderIcon(stock.data.dp)} {stock.data.dp}</td>
