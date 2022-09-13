@@ -10,19 +10,19 @@ import { useNavigate } from 'react-router-dom';
 
 const StockList = () => {
     const [stocks, setStock] = useState([])
-    const {watchList, setWachList} = useContext(WatchListContext)
+    const { watchList, setWachList, deleteStock } = useContext(WatchListContext)
     const navigate = useNavigate()
 
     const changeColor = (change) => {
         return (change > 0) ? "success" : "danger"
     }
     const renderIcon = (change) => {
-    return (change >0) ? <TbArrowBigUpLines /> : <TbArrowBigDownLines />
+        return (change > 0) ? <TbArrowBigUpLines /> : <TbArrowBigDownLines />
     }
-    const handleStockSelect = (symbol) =>{
+    const handleStockSelect = (symbol) => {
         navigate(`detail/${symbol}`)
     }
-    
+
     useEffect(() => {
         let isMounted = true
         const fetchData = async () => {
@@ -36,7 +36,7 @@ const StockList = () => {
                     })
 
                 }))
-                console.log("res:",res)
+                console.log("res:", res)
 
                 const data = res.map((responce) => {
                     return {
@@ -45,7 +45,7 @@ const StockList = () => {
                     }
                 })
 
-                console.log("data:",data)
+                console.log("data:", data)
                 if (isMounted)
                     setStock(data)
 
@@ -75,22 +75,25 @@ const StockList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                {stocks.map((stock) => {
+                    {stocks.map((stock) => {
                         return (
-                        <tr 
-                        className='table-row'
-                        key={stock.symbol}
-                        style={{cursor:"pointer"}}
-                        onClick={() => handleStockSelect(stock.symbol)}>
-                            <td scope='row'>{stock.symbol}</td>
-                            <td>{stock.data.c}</td>
-                            <td className={`text-${changeColor(stock.data.d)}`}>{renderIcon(stock.data.d)} {stock.data.d}</td>
-                            <td className={`text-${changeColor(stock.data.dp)}`}>{renderIcon(stock.data.dp)} {stock.data.dp}</td>
-                            <td>{stock.data.h}</td>
-                            <td>{stock.data.l}</td>
-                            <td>{stock.data.o}</td>
-                            <td>{stock.data.pc}</td>
-                        </tr>
+                            <tr
+                                className='table-row'
+                                key={stock.symbol}
+                                style={{ cursor: "pointer" }}
+                                onClick={() => handleStockSelect(stock.symbol)}>
+                                <td scope='row'>{stock.symbol}</td>
+                                <td>{stock.data.c}</td>
+                                <td className={`text-${changeColor(stock.data.d)}`}>{renderIcon(stock.data.d)} {stock.data.d}</td>
+                                <td className={`text-${changeColor(stock.data.dp)}`}>{renderIcon(stock.data.dp)} {stock.data.dp}</td>
+                                <td>{stock.data.h}</td>
+                                <td>{stock.data.l}</td>
+                                <td>{stock.data.o}</td>
+                                <td>{stock.data.pc} <button onClick={(e) => {
+                                    e.stopPropagation()
+                                    deleteStock(stock.symbol)
+                                }} className='btn btn-danger btn-sm ml-3 d-inline-block delete-button'>Remove</button></td>
+                            </tr>
                         )
                     })
                     }
